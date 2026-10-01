@@ -173,6 +173,8 @@ speech = [
     "soundfile>=0.12",
 ]
 speech-deepgram = ["deepgram-sdk>=3.0"]
+speech-wakeword = ["openwakeword<0.6", "onnxruntime>=1.17"]
+speech-mic = ["sounddevice>=0.4", "webrtcvad>=2.0"]
 eval-wandb = ["wandb>=0.17"]
 eval-sheets = ["gspread>=6.0", "google-auth>=2.0"]
 mining-pearl-cpu = [
@@ -230,6 +232,11 @@ fallback_version = "0.0.0+unknown"
 
 [tool.uv.sources]
 openjarvis-rust = { path = "rust/crates/openjarvis-python" }
+
+[tool.uv]
+# openwakeword>=0.5 hard-depends on tflite-runtime, which has no wheel for
+# Python 3.12+; openwakeword falls back to onnxruntime when it is absent.
+override-dependencies = ["tflite-runtime; sys_platform == 'linux' and python_full_version < '3.12'"]
 
 [tool.hatch.build.targets.sdist]
 # Tauri release bundles carry these executables; Python source distributions

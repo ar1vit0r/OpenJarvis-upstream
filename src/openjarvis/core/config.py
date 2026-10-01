@@ -1386,6 +1386,27 @@ class WhatsAppBaileysChannelConfig:
     assistant_has_own_number: bool = False
 
 
+@dataclass(slots=True)
+class VoiceChannelConfig:
+    """Per-channel config for the local mic/speaker voice channel."""
+
+    wakeword_backend: str = "openwakeword"
+    wakeword_keyword: str = "hey_jarvis"
+    wakeword_model_path: str = ""  # custom detector .onnx, empty = keyword lookup
+    wakeword_threshold: float = 0.5
+    stt_backend: str = "faster-whisper"
+    stt_language: str = ""  # Empty = auto-detect (e.g. "pt", "en")
+    tts_backend: str = ""  # Empty = no spoken replies
+    tts_voice_id: str = ""
+    # Upper bound on one utterance; recording normally ends earlier, once VAD
+    # hears the speaker stop.
+    record_seconds: float = 4.0
+    vad_max_silence_ms: int = 500  # trailing silence (ms) that ends an utterance
+    vad_aggressiveness: int = 2  # webrtcvad filtering, 0 (least) - 3 (most)
+    # sounddevice input device index or name; empty = system default.
+    input_device: str = ""
+
+
 @dataclass
 class ChannelConfig:
     """Channel messaging settings."""
@@ -1415,6 +1436,7 @@ class ChannelConfig:
     whatsapp_baileys: WhatsAppBaileysChannelConfig = field(
         default_factory=WhatsAppBaileysChannelConfig,
     )
+    voice: VoiceChannelConfig = field(default_factory=VoiceChannelConfig)
 
 
 @dataclass(slots=True)

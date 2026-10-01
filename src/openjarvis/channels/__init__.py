@@ -42,6 +42,7 @@ _CHANNEL_MODULES = [
     "twilio_sms",
     "sendblue",
     "gmail",
+    "voice_channel",
 ]
 
 for _mod in _CHANNEL_MODULES:

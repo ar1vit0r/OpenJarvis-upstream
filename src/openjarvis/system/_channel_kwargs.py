@@ -148,6 +148,29 @@ def _whatsapp_baileys(c: Any) -> Dict[str, Any]:
     return kw
 
 
+def _voice(c: Any) -> Dict[str, Any]:
+    kw: Dict[str, Any] = {
+        "wakeword_threshold": c.wakeword_threshold,
+        "record_seconds": c.record_seconds,
+        "vad_max_silence_ms": c.vad_max_silence_ms,
+        "vad_aggressiveness": c.vad_aggressiveness,
+    }
+    # Empty strings fall through to the channel's own defaults.
+    for name in (
+        "wakeword_backend",
+        "wakeword_keyword",
+        "wakeword_model_path",
+        "stt_backend",
+        "stt_language",
+        "tts_backend",
+        "tts_voice_id",
+        "input_device",
+    ):
+        if getattr(c, name):
+            kw[name] = getattr(c, name)
+    return kw
+
+
 def _sendblue(c: Any) -> Dict[str, Any]:
     if c is None:
         return {}
@@ -180,6 +203,7 @@ _CHANNEL_MAPPERS: Dict[str, tuple] = {
     "feishu": ("feishu", _feishu),
     "bluebubbles": ("bluebubbles", _bluebubbles),
     "whatsapp_baileys": ("whatsapp_baileys", _whatsapp_baileys),
+    "voice": ("voice", _voice),
     "sendblue": ("sendblue", _sendblue),
 }
 

@@ -82,6 +82,9 @@ class EventType(str, Enum):
     OPTIMIZE_TRIAL_END = "optimize_trial_end"
     OPTIMIZE_RUN_END = "optimize_run_end"
     FEEDBACK_RECEIVED = "feedback_received"
+    # Voice channel state transitions, for UI integration
+    VOICE_LISTENING_START = "voice_listening_start"
+    VOICE_SPEAKING_START = "voice_speaking_start"
 
 
 @dataclass(slots=True)
