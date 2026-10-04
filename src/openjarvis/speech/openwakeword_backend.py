@@ -86,6 +86,12 @@ class OpenWakeWordBackend(WakeWordBackend):
                 model_kwargs["speex_noise_suppression"] = True
             try:
                 self._model = Model(wakeword_models=[model_id], **model_kwargs)
+                if self._model_path:
+                    # A custom file is keyed by its stem in predict(), not by
+                    # the configured keyword (which would read 0.0 forever).
+                    self._score_key = os.path.splitext(
+                        os.path.basename(self._model_path)
+                    )[0]
             except (TypeError, ValueError):
                 # openwakeword<0.5 (only tflite-free option on Python 3.12 —
                 # >=0.5 hard-depends on tflite-runtime, which has no cp312

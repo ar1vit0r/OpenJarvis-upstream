@@ -103,6 +103,20 @@ def test_openwakeword_falls_back_to_model_paths_on_old_api():
     assert backend._score_key == "hey_jarvis_v0.1"
 
 
+def test_openwakeword_custom_model_path_scores_under_file_stem():
+    """A custom model_path loads on the first try (openwakeword>=0.5) but its
+    predict() output is still keyed by file stem, not the keyword."""
+    with patch(
+        "openjarvis.speech.openwakeword_backend.Model", return_value=MagicMock()
+    ):
+        backend = OpenWakeWordBackend(
+            keyword="hey_jarvis", model_path="/fake/jarvis_retrain2.onnx"
+        )
+        backend._ensure_model()
+
+    assert backend._score_key == "jarvis_retrain2"
+
+
 def test_openwakeword_falls_back_when_verifier_dict_partially_matches():
     """openwakeword<0.5 swallows wakeword_models via **kwargs, loads every
     pretrained model, and raises ValueError when the custom verifier dict
